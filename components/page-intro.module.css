@@ -1,0 +1,23 @@
+.bk {
+    color: #333;
+    background: #ffffff;
+    margin-bottom: 32px;
+}
+
+.container {
+    padding: 0 12px;
+    margin: 0 auto;
+    max-width: 1280px;
+    @media (min-width: $tablet-landscape-breakpoint): {
+        padding: 0 6rem;
+    }
+}
+
+.pageIntro {
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
+}

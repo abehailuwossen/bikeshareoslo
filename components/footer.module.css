@@ -1,0 +1,48 @@
+.bk {
+  color: #F5F5F5;
+  background: #333;
+  margin-top: 24px;
+}
+
+.container {
+  padding: 32px 12px;
+  margin: 0 auto; /* will apply on larger screens where device width his larger than 'max-width' */
+  max-width: 1280px;
+  @media (min-width: $tablet-landscape-breakpoint): {
+      padding: 0 6rem;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.footerList {
+  flex-basis: 25%;
+  margin-bottom: 16px;
+  @media (min-width: 768px) {
+    margin-bottom: 0px;
+  }
+}
+
+.footerLogo {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 32px;
+  @media (min-width: 768px) {
+    margin-bottom: 0px;
+  }
+}
+
+.dataSource {
+  height: 60px;
+  padding: 14px 0;
+}
+
+.dataSource a {
+  color: #0069c2;
+}

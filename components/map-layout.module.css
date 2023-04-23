@@ -1,0 +1,21 @@
+.bk {
+    color: 'black';
+    background: #ffffff;
+}
+
+.container {
+    padding: 0 1.2rem;
+    margin: 0 auto; /* will apply on larger screens where device width his larger than 'max-width' */
+    /* max-width: 1280px; */
+    width: 100%;
+    height: 80vh;
+    @media (min-width: $tablet-landscape-breakpoint): {
+        padding: 0 6rem;
+    }
+}
+
+.mapLayout {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
