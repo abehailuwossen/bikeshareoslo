@@ -13,8 +13,8 @@ const StatusOverview = () => {
         let bikes = 0;
         let docks = 0;
         statusList?.forEach((station) => {
-            bikes += station.numBikesAvailable;
-            docks += station.numDocksAvailable;
+            bikes += station.num_bikes_available;
+            docks += station.num_docks_available;
         });
         setTotalAvailableBikes(bikes);
         setTotalAvailableDocks(docks);

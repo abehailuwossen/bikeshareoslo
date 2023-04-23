@@ -1,19 +1,36 @@
 import { useMap } from "./context/MapContext";
 import { useEffect, useState } from "react";
 import Station from "./Station";
-import { StationInfo } from "@/types/dataTypes";
-import { getStationInfo } from "@/service/service";
+import { StationInfo, StationStatus, StationType } from "@/types/dataTypes";
+import { getStationInfo, getStationStatus } from "@/service/service";
+
 
 const StationList: React.FC<Props> = ({setError}) => {
     const { map } = useMap();
-    const [stations, setStations] = useState<StationInfo[]>([]);
+    const [stations, setStations] = useState<StationType[]>([]);
 
     
     useEffect(() => {
         try {
             (async function() {
-                const stationInfo = await getStationInfo();
-                setStations(stationInfo);
+                const stationInfoList: StationInfo[] = await getStationInfo();
+                const stationStatusList: StationStatus[] = await getStationStatus();
+
+                let stations: StationType[] = [];
+                stationInfoList.forEach((stationInfo) => {
+                    const stationStatus = stationStatusList.find((stationStatus) => stationStatus.station_id === stationInfo.station_id)
+                    if (stationStatus) {
+                        stations.push({
+                            stationId: stationInfo.station_id,
+                            name: stationInfo.name,
+                            lat: stationInfo.lat,
+                            lon: stationInfo.lon,
+                            numBikesAvailable: stationStatus.num_bikes_available,
+                            numDocksAvailable: stationStatus.num_docks_available
+                        })
+                    }
+                });
+                setStations(stations);
                 setError('');
             })();
         } catch(err) {
@@ -24,10 +41,10 @@ const StationList: React.FC<Props> = ({setError}) => {
 
     return (
         <>
-            {stations.map((stationItem) => (
+            {stations.map((station) => (
                 <Station 
-                    key={stationItem.stationId} 
-                    station={stationItem} map={map}
+                    key={station.stationId} 
+                    station={station} map={map}
                 />
             ))}
         </>

@@ -1,7 +1,7 @@
 import { Marker } from "@react-google-maps/api";
-import { StationInfo, StationStatus } from "@/types/dataTypes";
+import { StationStatus, StationType } from "@/types/dataTypes";
 import encodeMarkerSVG from "@/utils/encodeMarkerSVG";
-import { getStationInfo, getStationStatus } from "@/service/service";
+import { getStationStatus } from "@/service/service";
 import { useEffect, useState } from "react";
 
 
@@ -9,21 +9,23 @@ const Station: React.FC<Props> = ({station, map}) => {
     const [infowindow, setInfoWindow] = useState<() => void>();
     const [infoWindowOn, setInfoWindowOn] = useState(false);
 
-    const getStatusInfo = async () => {
-        const statusList: StationStatus[] = await getStationStatus();
-        const status = statusList.find((status) => status.stationId === station.stationId);
-        
-        return (
-            `<p class='station-name'>${station.name}</p>
-            <div class='status-item'>
-                <p>Bikes</p>
-                <p>${status && status.numBikesAvailable}</p>
-            </div>
-            <div class='status-item'>
-                <p>Docks</p>
-                <p>${status && status.numDocksAvailable}</p>
-            </div>`
-        );
+    const makeInfoWindowContent = async () => {
+        const stationStatusList: StationStatus[] = await getStationStatus();
+        const stationStatus = stationStatusList.find((stationStatus) => stationStatus.station_id === station.stationId);
+
+        if (stationStatus) {
+            return (
+                `<p class='station-name'>${station.name}</p>
+                <div class='status-item'>
+                    <p>Available Bikes</p>
+                    <p>${stationStatus.num_bikes_available}</p>
+                </div>
+                <div class='status-item'>
+                    <p>Available Docks</p>
+                    <p>${stationStatus.num_docks_available}</p>
+                </div>`
+            );
+        }
     }
 
     
@@ -40,15 +42,15 @@ const Station: React.FC<Props> = ({station, map}) => {
 
     return (
             <Marker
-                key={station.station_id}
+                key={station.stationId}
                 position={{lat: station.lat, lng: station.lon}}
                 icon={{
-                    url: encodeMarkerSVG(`${station.capacity} / 12`),
-                    scaledSize: new google.maps.Size(40, 57)
+                    url: encodeMarkerSVG(`${station.numBikesAvailable} / ${station.numDocksAvailable}`),
+                    scaledSize: new google.maps.Size(45, 64)
                 }}
                 onClick={ async (e) => {
                     const infowindow = new google.maps.InfoWindow({
-                        content: await getStatusInfo(),
+                        content: await makeInfoWindowContent(),
                         ariaLabel: "Uluru",
                         position: e.latLng,
                     });
@@ -67,6 +69,6 @@ export default Station;
 
 
 interface Props {
-    station: StationInfo;
+    station: StationType;
     map: google.maps.Map | null;
 }
